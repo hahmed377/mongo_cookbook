@@ -34,5 +34,20 @@ describe 'mongo::default' do
       expect(chef_run).to upgrade_package 'mongodb-org'
     end
 
+    it "should create the mongod.conf file in /etc/mongod.conf" do
+        expect(chef_run).to create_template("/etc/mongod.conf")
+      end
+
+      it "should create the mongod.conf file in /lib/systemd/system/mongod.service" do
+        expect(chef_run).to create_template("/lib/systemd/system/mongod.service")
+      end
+
+    it "should start the MongoDB service" do
+      expect(chef_run).to start_service("mongod")
+    end
+    it "should enable the MongoDB service" do
+      expect(chef_run).to enable_service("mongod")
+    end
+
   end
 end

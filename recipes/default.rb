@@ -3,6 +3,8 @@
 # Recipe:: default
 #
 # Copyright:: 2018, The Authors, All Rights Reserved.
+
+
 apt_update 'update' do
   action :update
 end
@@ -13,8 +15,28 @@ apt_repository 'mongodb-org' do
   components ["multiverse"]
   keyserver "hkp://keyserver.ubuntu.com:80"
   key "EA312927"
+  action :add
 end
 
 package 'mongodb-org' do
-  action :upgrade
+  action [:install, :upgrade]
+end
+
+service 'mongod' do
+  action [:enable, :start]
+end
+
+file '/etc/mongod.conf' do
+  action :delete
+  notifies(:restart, 'service[mongod]')
+end
+
+template '/etc/mongod.conf' do
+  source 'mongod.conf.erb'
+  notifies(:restart, 'service[mongod]')
+end
+
+template '/lib/systemd/system/mongod.service' do
+  source 'mongod.service.erb'
+  notifies(:restart, 'service[mongod]')
 end
