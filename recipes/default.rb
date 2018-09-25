@@ -15,7 +15,6 @@ apt_repository 'mongodb-org' do
   components ["multiverse"]
   keyserver "hkp://keyserver.ubuntu.com:80"
   key "EA312927"
-  action :add
 end
 
 package 'mongodb-org' do
